@@ -437,11 +437,34 @@ namespace Hw1_Hashing
                 }
             }
             //otherwise cal key in hash table and get true phone no
-            for (int i = 0; i < PersonData1.Count; i++)
+            string mkey = Hash[key].ToString();
+            string[] splitkey = mkey.Split(' ');
+            foreach (string pkey in splitkey)
             {
-                foreach (PhoneData item in PhoneData1)
+                int indexPerson = PersonData1.FindIndex(i => i.PersonNo == Convert.ToInt16(pkey));
+                Console.Write("[" + PersonData1[indexPerson].PersonNo.ToString() + "] ");
+                int j = 1;
+                for (int i = 0; i < PhoneData1.Count; i++)
                 {
-                    //show item
+                    if (PhoneData1[i].no == Convert.ToInt16(pkey))
+                    {
+                        string pNumber = PhoneData1[i].PhoneNumber;
+                        string PhoneNumber = pNumber.Substring(0, 3) + " " + pNumber.Substring(3, 3) + " " + pNumber.Substring(7, 4) + Environment.NewLine;
+                        int k = PersonData1[i].Name.Length;
+                        if (j == 1)
+                        {
+                            Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
+                        }
+                        else
+                        {
+                            for (int n = 0; n < k + 4; n++)
+                            {
+                                Console.Write(" ");
+                            }
+                            Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
+                        }
+                        j++;
+                    }
                 }
             }
 
