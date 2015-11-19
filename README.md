@@ -7,4 +7,4 @@ Run file to Test in : bin\Debug\Hw1_Hashing.exe <br>
 <br>
 # Developer
 Maleethip Paladkun 570632104 <br>
-Supiluck Manokiang 580632077
+Supilug Manokiang 580632077
