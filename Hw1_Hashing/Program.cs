@@ -437,6 +437,7 @@ namespace Hw1_Hashing
                 }
             }
             //otherwise cal key in hash table and get true phone no
+            bool isHaveValue = false;
             string mkey = Hash[key].ToString();
             string[] splitkey = mkey.Split(' ');
             foreach (string pkey in splitkey)
@@ -466,6 +467,12 @@ namespace Hw1_Hashing
                         j++;
                     }
                 }
+                if (j > 1)
+                    isHaveValue = true;
+            }
+            if (!isHaveValue)
+            {
+                Console.WriteLine("No Result");
             }
 
         }
@@ -473,6 +480,42 @@ namespace Hw1_Hashing
         static void modify()
         {
             //modify data
+            //show old list
+            Console.WriteLine("the list is:");
+            showList(null);
+
+            //get replace person phone no.
+            Console.WriteLine("Enter the person id to be modified or any key to cancel :");
+            string no = Console.ReadLine();
+            int Personid;
+            if(int.TryParse(no,out Personid))
+            {
+                Console.WriteLine("Enter the phone number id to be modified :");
+                string phoneno = Console.ReadLine();
+                int phoneNum;
+                bool isPhoneNum = int.TryParse(phoneno,out phoneNum);
+                if (isPhoneNum)
+                {
+                    int indexPerson = PersonData1.FindIndex(i=> i.PersonNo == Personid);
+                    Console.WriteLine("Enter the new phone number :");
+                    string phonenumber = Console.ReadLine();
+                    string disph1 = phonenumber.Substring(0, 3) + " " + phonenumber.Substring(3, 3) + " " + phonenumber.Substring(6, 4);
+                    //compare
+                    int indexPhone = PhoneData1.FindIndex(i=> i.phoneOrder == phoneNum && i.no == Personid);
+                    string number = PhoneData1[indexPhone].PhoneNumber;
+                    string disph2 = number.Substring(0, 3) + " " + number.Substring(3, 3) + " " + number.Substring(6, 4);
+                    Console.WriteLine("Do you want to modify "+PersonData1[indexPerson].Name+"'s contact from "+disph2+" to "+disph1+" ('/y'/ for yes, any key to cancel)? :");
+                    //if 'y' replace phone number
+                    //else do nothing
+                }
+                else
+                {
+                    Console.WriteLine("Error it is not a phone number, please input new command");
+
+                }
+
+            }
+            
         }
 
         static void delete()
@@ -483,6 +526,13 @@ namespace Hw1_Hashing
         static void search()
         {
             //search 3 key ---on hash table
+            Console.WriteLine("Enter 3 digits to search:");
+            string x = string.Empty;
+            do
+            {
+                x = Console.ReadLine();
+            } while (x.Length != 3);
+            showList(x);
         }
 
     }
