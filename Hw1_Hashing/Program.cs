@@ -105,7 +105,7 @@ namespace Hw1_Hashing
             string inputNP = Console.ReadLine();
             int no;
             //if it new person
-            if ("n".Contains(inputNP))
+            if ("nN".Contains(inputNP))
             {
                 Console.WriteLine("Enter the name (8 Characters maximum) :");
                 string inputName = Console.ReadLine();
@@ -177,7 +177,7 @@ namespace Hw1_Hashing
                 {
                     Console.WriteLine("Enter replaced number or /'n/' for new phone number:");
                     string inputPHID = Console.ReadLine();
-                    if ("n".Contains(inputPHID))
+                    if ("nN".Contains(inputPHID))
                     {
                         //add new phone number and position
                         PhoneData ph = new PhoneData();
@@ -215,7 +215,7 @@ namespace Hw1_Hashing
                             p2 = p2.Substring(0, 3) + " " + p2.Substring(3, 3) + " " + p2.Substring(6, 4);
                             Console.WriteLine("Do you want to replace " + PersonData1[noIndex].Name + "'s contact " + p1 + " with " + p2 + " ('/y'/ for yes, any key to cancel)? :");
                             string checkR = Console.ReadLine();
-                            if ("y".Contains(checkR))
+                            if ("yY".Contains(checkR))
                             {
                                 //replace that phone no.
                                 PhoneData ph1 = new PhoneData();
@@ -496,17 +496,49 @@ namespace Hw1_Hashing
                 bool isPhoneNum = int.TryParse(phoneno,out phoneNum);
                 if (isPhoneNum)
                 {
+
                     int indexPerson = PersonData1.FindIndex(i=> i.PersonNo == Personid);
-                    Console.WriteLine("Enter the new phone number :");
-                    string phonenumber = Console.ReadLine();
-                    string disph1 = phonenumber.Substring(0, 3) + " " + phonenumber.Substring(3, 3) + " " + phonenumber.Substring(6, 4);
-                    //compare
-                    int indexPhone = PhoneData1.FindIndex(i=> i.phoneOrder == phoneNum && i.no == Personid);
-                    string number = PhoneData1[indexPhone].PhoneNumber;
-                    string disph2 = number.Substring(0, 3) + " " + number.Substring(3, 3) + " " + number.Substring(6, 4);
-                    Console.WriteLine("Do you want to modify "+PersonData1[indexPerson].Name+"'s contact from "+disph2+" to "+disph1+" ('/y'/ for yes, any key to cancel)? :");
-                    //if 'y' replace phone number
-                    //else do nothing
+                    if (phoneNum <= PersonData1[indexPerson].CountPhoneNo)
+                    {
+                        Console.WriteLine("Enter the new phone number :");
+                        string phonenumber = Console.ReadLine();
+
+                        string disph1 = phonenumber.Substring(0, 3) + " " + phonenumber.Substring(3, 3) + " " + phonenumber.Substring(6, 4);
+                        //compare
+                        int indexPhone = PhoneData1.FindIndex(i => i.phoneOrder == phoneNum && i.no == Personid);
+                        string number = PhoneData1[indexPhone].PhoneNumber;
+                        string disph2 = number.Substring(0, 3) + " " + number.Substring(3, 3) + " " + number.Substring(6, 4);
+                        Console.WriteLine("Do you want to modify " + PersonData1[indexPerson].Name + "'s contact from " + disph2 + " to " + disph1 + " ('/y'/ for yes, any key to cancel)? :");
+                        string checkY = Console.ReadLine();
+
+                        //if 'y' replace phone number
+                        if ("yY".Contains(checkY))
+                        {
+                            //old phone no
+                            PhoneData ph = new PhoneData();
+                            ph.no = Personid;
+                            ph.PhoneNumber = number;
+                            ph.phoneOrder = phoneNum;
+
+                            DeleteHashTable(ph);
+
+                            PhoneData1[indexPhone].PhoneNumber = phonenumber;
+                            //new phone no
+                            ph.PhoneNumber = phonenumber;
+
+                            InsertHashTable(ph);
+
+                            //show new list
+                            Console.WriteLine("The new list is :");
+                            showList(null);
+
+                        }
+                        //else do nothing
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error there is no phone id for modify, please input new command");
+                    }
                 }
                 else
                 {
@@ -521,6 +553,69 @@ namespace Hw1_Hashing
         static void delete()
         {
             //delete data
+            Console.WriteLine("The list is :");
+            showList(null);
+            Console.WriteLine("Enter the person id to be deleted or any key to cancel:");
+            string pid = Console.ReadLine();
+            int personid;
+            if(int.TryParse(pid, out personid))
+            {
+                if (personid < PersonData1.Count)
+                {
+                    int indexPerson = PersonData1.FindIndex(i => i.PersonNo == personid);
+                    if (PersonData1[indexPerson].CountPhoneNo == 1)
+                    {
+                        //delete person data and phone data
+                        Console.WriteLine("Do you want to delete "+PersonData1[indexPerson].Name+"'s contact as well ('/y'/ for yes, any key to cancel)? :");
+                        string checkY = Console.ReadLine();
+                        if ("yY".Contains(checkY))
+                        {
+                            int indexPhone = PhoneData1.FindIndex(i=> i.no == personid);
+                            PhoneData ph = PhoneData1[indexPhone];
+                            DeleteHashTable(ph);
+                            PersonData1.RemoveAt(indexPerson);
+                            PhoneData1.RemoveAt(indexPhone);
+                            
+                            //new list
+                            Console.WriteLine("The new list is:");
+                            showList(null);
+                        }
+
+                    }
+                    else
+                    {
+                        //delete phone data only
+                        Console.WriteLine("Enter the phone number id to be deleted :");
+                        string phid = Console.ReadLine();
+                        int phoneid;
+
+                        //checking is phone id is more than count
+                        if (int.TryParse(phid, out phoneid))
+                        {
+                            if (phoneid > PersonData1[indexPerson].CountPhoneNo)
+                            {
+                                Console.WriteLine("Error, there is no this phone id. Please, input new command.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Confirm ('/y'/ for yes, any key to cancel)? :");
+                                string confirm = Console.ReadLine();
+                                if ("Yy".Contains(confirm))
+                                {
+                                    int indexPhone = PhoneData1.FindIndex(i => i.phoneOrder == phoneid && i.no == personid);
+                                    PhoneData ph = PhoneData1[indexPhone];
+                                    PhoneData1.RemoveAt(indexPhone);
+                                    DeleteHashTable(ph);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, there is no this person id. Please, input new command.");
+                }
+            }
         }
 
         static void search()
