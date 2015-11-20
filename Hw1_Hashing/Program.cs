@@ -428,7 +428,7 @@ namespace Hw1_Hashing
                         if (PhoneData1[i].no == PersonItem.PersonNo)
                         {
                             string pNumber = PhoneData1[i].PhoneNumber;
-                            string PhoneNumber = pNumber.Substring(0, 3) + " " + pNumber.Substring(3, 3) + " " + pNumber.Substring(7, 4) + Environment.NewLine;
+                            string PhoneNumber = pNumber.Substring(0, 3) + " " + pNumber.Substring(3, 3) + " " + pNumber.Substring(6, 4) + Environment.NewLine;
                             int k = PersonData1[i].Name.Length;
                             if (j == 1)
                             {
