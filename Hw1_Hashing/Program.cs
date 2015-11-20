@@ -62,6 +62,7 @@ namespace Hw1_Hashing
             catch (Exception ex)
             {
                 Console.WriteLine("Program Error : " + ex.Message);
+                Console.Read();
             }
         }
 
@@ -268,8 +269,9 @@ namespace Hw1_Hashing
                 PersonData p = null;
                 PhoneData ph = null;
                 int i = 1;
-                foreach (string line in lines)
+                for (int j = 0; j < lines.Count() ;j++ )
                 {
+                    string line = lines[j];
                     string[] spline = line.Split(' ');
                     //if a person
                     if (spline.Count() > 1)
@@ -293,10 +295,19 @@ namespace Hw1_Hashing
                         ph.no = p.PersonNo;
                         ph.PhoneNumber = spline[0];
                         ph.phoneOrder = i;
-                        i++;
+                        i= i+1;
                         PhoneData1.Add(ph);
                         //insert into hash table
                         InsertHashTable(ph);
+                        if (j == lines.Count() - 1)
+                        {
+                            //add old one
+                            if (p != null)
+                            {
+                                PersonData1.Add(p);
+                            }
+                        }
+
                     }
                 }
 
@@ -621,12 +632,11 @@ namespace Hw1_Hashing
         static void search()
         {
             //search 3 key ---on hash table
-            Console.WriteLine("Enter 3 digits to search:");
             string x = string.Empty;
             bool isNumber = false;
             do
             {
-
+                Console.Write("Enter 3 digits to search:");
                 x = Console.ReadLine();
                 if (x.Length != 3)
                 {
