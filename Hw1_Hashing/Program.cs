@@ -14,7 +14,7 @@ namespace Hw1_Hashing
         static List<PhoneData> PhoneData1 = new List<PhoneData>(); //arraylist for phone number
         static List<PersonData> PersonData1 = new List<PersonData>(); //arraylist for person 
         static Hashtable Hash = new Hashtable();
-        static string path = @"D:\PhoneBook.txt";
+        static string path = @"PhoneBook1.txt";
 
         static void Main(string[] args)
         {
