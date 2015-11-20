@@ -623,10 +623,23 @@ namespace Hw1_Hashing
             //search 3 key ---on hash table
             Console.WriteLine("Enter 3 digits to search:");
             string x = string.Empty;
+            bool isNumber = false;
             do
             {
+
                 x = Console.ReadLine();
-            } while (x.Length != 3);
+                if (x.Length != 3)
+                {
+                    Console.WriteLine("Error, there is no 3 digits.");
+                }
+                int number;
+                isNumber = int.TryParse(x,out number);
+                if (!isNumber)
+                {
+                    Console.WriteLine("Error, the input is not all number.");
+                }
+
+            } while (x.Length != 3 || !isNumber);
             showList(x);
         }
 
