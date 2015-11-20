@@ -416,13 +416,15 @@ namespace Hw1_Hashing
 
         static void showList(string key)
         {
+            int j = 1;
+            bool isHaveValue1 = false;
             //show full list if key = null
             if (key == null)
             {
                 foreach (PersonData PersonItem in PersonData1)
                 {
-                    Console.Write("[" + PersonItem.PersonNo.ToString() + "] ");
-                    int j = 1;
+                    j = 1;
+                    Console.Write("[" + PersonItem.PersonNo.ToString() + "] "+PersonItem.Name);
                     for (int i = 0; i < PhoneData1.Count; i++)
                     {
                         if (PhoneData1[i].no == PersonItem.PersonNo)
@@ -443,49 +445,67 @@ namespace Hw1_Hashing
                                 Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
                             }
                             j++;
+                            isHaveValue1 = true;
                         }
                     }
                 }
+                if (!isHaveValue1)
+                {
+                    Console.WriteLine("No Result");
+                }
             }
             //otherwise cal key in hash table and get true phone no
-            bool isHaveValue = false;
-            string mkey = Hash[key].ToString();
-            string[] splitkey = mkey.Split(' ');
-            foreach (string pkey in splitkey)
+            else
             {
-                int indexPerson = PersonData1.FindIndex(i => i.PersonNo == Convert.ToInt16(pkey));
-                Console.Write("[" + PersonData1[indexPerson].PersonNo.ToString() + "] ");
-                int j = 1;
-                for (int i = 0; i < PhoneData1.Count; i++)
+                bool isHaveValue = false;
+                string mkey = Hash[key].ToString();
+                string[] splitkey = mkey.Split(' ');
+                foreach (string pkey in splitkey)
                 {
-                    if (PhoneData1[i].no == Convert.ToInt16(pkey))
+                    int indexPerson = PersonData1.FindIndex(i => i.PersonNo == Convert.ToInt16(pkey));
+                    Console.Write("[" + PersonData1[indexPerson].PersonNo.ToString() + "] "+PersonData1[indexPerson].Name);
+                    for (int i = 0; i < PhoneData1.Count; i++)
                     {
-                        string pNumber = PhoneData1[i].PhoneNumber;
-                        string PhoneNumber = pNumber.Substring(0, 3) + " " + pNumber.Substring(3, 3) + " " + pNumber.Substring(7, 4) + Environment.NewLine;
-                        int k = PersonData1[i].Name.Length;
-                        if (j == 1)
+                        if (PhoneData1[i].no == Convert.ToInt16(pkey))
                         {
-                            Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
-                        }
-                        else
-                        {
-                            for (int n = 0; n < k + 4; n++)
+                            bool isTrue = false;
+                            for (int n = 0; n < 7; n++)
                             {
-                                Console.Write(" ");
+                                if( string.Compare(key,PhoneData1[i].PhoneNumber.Substring(n,3)) == 0)
+                                {
+                                   isTrue = true;
+                                   break;
+                                }
                             }
-                            Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
+                            if (isTrue)
+                            {
+                                string pNumber = PhoneData1[i].PhoneNumber;
+                                string PhoneNumber = pNumber.Substring(0, 3) + " " + pNumber.Substring(3, 3) + " " + pNumber.Substring(6, 4) + Environment.NewLine;
+                                int k = PersonData1[i].Name.Length;
+                                if (j == 1)
+                                {
+                                    Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
+                                }
+                                else
+                                {
+                                    for (int n = 0; n < k + 4; n++)
+                                    {
+                                        Console.Write(" ");
+                                    }
+                                    Console.Write(" " + PhoneData1[i].no + " - " + PhoneNumber);
+                                }
+                                j++;
+                            }
                         }
-                        j++;
                     }
                 }
                 if (j > 1)
                     isHaveValue = true;
+                if (!isHaveValue)
+                {
+                    Console.WriteLine("No Result");
+                }
             }
-            if (!isHaveValue)
-            {
-                Console.WriteLine("No Result");
-            }
-
         }
 
         static void modify()
