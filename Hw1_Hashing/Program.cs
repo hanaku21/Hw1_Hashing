@@ -89,14 +89,13 @@ namespace Hw1_Hashing
 
                         if (String.Compare(item.PhoneNumber, x) == 0)
                         {
-                            Console.WriteLine("Error - the phone number is already in this phone book. Please insert the new one.: ");
+                            Console.WriteLine("Error - the phone number is already in this phone book.");
                             m = false;
-                            break;
                         }
 
                     }
                 }
-            } while (m == true);
+            } while (m == false);
 
             Console.WriteLine("The list is:");
             showList(null);
