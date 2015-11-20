@@ -101,7 +101,7 @@ namespace Hw1_Hashing
             showList(null);
 
             //Show for Enter input new person or not
-            Console.Write("Enter the person id to append the phone number or /'n/' for new phone number :");
+            Console.Write("Enter the person id to append the phone number or 'n' for new phone number :");
             string inputNP = Console.ReadLine();
             int no;
             //if it new person
@@ -111,7 +111,7 @@ namespace Hw1_Hashing
                 string inputName = Console.ReadLine();
                 while (inputName.Length > 8)
                 {
-                    Console.WriteLine("Error name is more that 8 Characters, Please Enter new name:");
+                    Console.Write("Error name is more that 8 Characters, Please Enter new name:");
                     inputName = Console.ReadLine();
                 }
 
@@ -142,7 +142,7 @@ namespace Hw1_Hashing
                 //if it full show error and input the replace no for replace that phone no
                 if (PersonData1[noIndex].CountPhoneNo == 5)
                 {
-                    Console.Write(PersonData1[noIndex] + " has 5 phone numbers already, enter replaced number or any key for cancel:");
+                    Console.Write(PersonData1[noIndex].Name + " has 5 phone numbers already,"+Environment.NewLine+" enter replaced number or any key for cancel:");
                     string inputRC = Console.ReadLine();
                     int tryParseInputRC;
                     //if not cancel replace that phone no to another one
@@ -175,7 +175,7 @@ namespace Hw1_Hashing
                 }
                 else
                 {
-                    Console.Write("Enter replaced number or /'n/' for new phone number:");
+                    Console.Write("Enter replaced number or 'n' for new phone number:");
                     string inputPHID = Console.ReadLine();
                     if ("nN".Contains(inputPHID))
                     {
@@ -186,6 +186,7 @@ namespace Hw1_Hashing
                         ph.PhoneNumber = x;
                         PhoneData1.Add(ph);
 
+                        PersonData1[noIndex].CountPhoneNo++;
                         //increase phone item in person
                         int indexPer = PersonData1.FindIndex(i => i.PersonNo == no);
 
@@ -197,36 +198,37 @@ namespace Hw1_Hashing
                         int phoneN;
                         bool isNumberic = int.TryParse(inputPHID, out phoneN);
                         //ask to replace phone no.
-                        if (phoneN <= PersonData1[noIndex].CountPhoneNo)
+                        if (phoneN <= PersonData1[noIndex].CountPhoneNo && phoneN > 0)
                         {
                             int j = 0;
                             for (int i = 0; i < PhoneData1.Count; i++)
                             {
-                                if (PhoneData1[i].phoneOrder == phoneN)
+                                if (PhoneData1[i].phoneOrder == phoneN && PhoneData1[i].no == no)
                                 {
                                     j = i;
                                     break;
                                 }
                             }
-
+                            string pp1;
                             string p1 = PhoneData1[j].PhoneNumber;
+                            pp1 = p1;
                             p1 = p1.Substring(0, 3) + " " + p1.Substring(3, 3) + " " + p1.Substring(6, 4);
                             string p2 = x;
                             p2 = p2.Substring(0, 3) + " " + p2.Substring(3, 3) + " " + p2.Substring(6, 4);
-                            Console.Write("Do you want to replace " + PersonData1[noIndex].Name + "'s contact " + p1 + " with " + p2 + " ('/y'/ for yes, any key to cancel)? :");
+                            Console.Write("Do you want to replace " + PersonData1[noIndex].Name + "'s contact " + p1 + " with " + p2 +Environment.NewLine+ " ('y' for yes, any key to cancel)? :");
                             string checkR = Console.ReadLine();
                             if ("yY".Contains(checkR))
                             {
                                 //replace that phone no.
                                 PhoneData ph1 = new PhoneData();
                                 ph1.no = no;
-                                ph1.PhoneNumber = x;
+                                ph1.PhoneNumber = x.Trim();
                                 ph1.phoneOrder = phoneN;
                                 PhoneData1[j] = ph1;
 
                                 PhoneData ph2 = new PhoneData();
                                 ph2.no = no;
-                                ph2.PhoneNumber = p2.Trim();
+                                ph2.PhoneNumber = pp1;
                                 ph2.phoneOrder = phoneN;
 
                                 //remove hash table about that phone no.
@@ -371,37 +373,40 @@ namespace Hw1_Hashing
             for (int i = 0; i < 7; i++)
             {
                 key = ph.PhoneNumber.Substring(i, 3);
-                string x = Hash[key].ToString();
-                string[] item = x.Split(' ');
-                bool isHavSameHash = false;
-                foreach (string m in item)
+                if (Hash[key] != null && Hash[key].ToString() != string.Empty)
                 {
-                    //if the same person
-                    if (ph.no == Convert.ToInt16(m))
+                    string x = Hash[key].ToString();
+                    string[] item = x.Split(' ');
+                    bool isHavSameHash = false;
+                    foreach (string m in item)
                     {
-                        foreach (PhoneData photh in PhoneData1)
+                        //if the same person
+                        if (ph.no == Convert.ToInt16(m))
                         {
-                            if (photh.no == ph.no && ph.PhoneNumber != photh.PhoneNumber)
+                            foreach (PhoneData photh in PhoneData1)
                             {
-                                isHavSameHash = true;
-                                break;
+                                if (photh.no == ph.no && ph.PhoneNumber != photh.PhoneNumber)
+                                {
+                                    isHavSameHash = true;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-                x = string.Empty;
-                if (!isHavSameHash)
-                {
-                    for (int j = 0; j < item.Length; i++)
+                    x = string.Empty;
+                    if (!isHavSameHash)
                     {
-                        if (ph.no == Convert.ToInt16(item[j]))
+                        for (int j = 0; j < item.Length; j++)
                         {
-                            item[j] = string.Empty;
+                            if (ph.no == Convert.ToInt16(item[j]))
+                            {
+                                item[j] = string.Empty;
+                            }
+                            x = x + item[j] + " ";
                         }
-                        x = x + item[j] + " ";
                     }
+                    Hash[key] = x;
                 }
-                Hash[key] = x;
             }
 
         }
@@ -433,6 +438,10 @@ namespace Hw1_Hashing
                             int k = 8;
                             if (j == 1)
                             {
+                                for (int m = 0; m < 8-PersonItem.Name.Length; m++)
+                                {
+                                    Console.Write(" ");
+                                }
                                 Console.Write(" " + PhoneData1[i].phoneOrder + " - " + PhoneNumber);
                             }
                             else
@@ -486,6 +495,10 @@ namespace Hw1_Hashing
                                     int k = 8;
                                     if (j == 1)
                                     {
+                                        for (int m = 0; m < 8-PersonData1[indexPerson].Name.Length; m++)
+                                        {
+                                            Console.Write(" ");
+                                        }
                                         Console.Write(" " + PhoneData1[i].phoneOrder + " - " + PhoneNumber);
                                     }
                                     else
@@ -594,13 +607,13 @@ namespace Hw1_Hashing
             int personid;
             if(int.TryParse(pid, out personid))
             {
-                if (personid < PersonData1.Count)
+                if (personid <=PersonData1.Count)
                 {
                     int indexPerson = PersonData1.FindIndex(i => i.PersonNo == personid);
                     if (PersonData1[indexPerson].CountPhoneNo == 1)
                     {
                         //delete person data and phone data
-                        Console.Write("Do you want to delete "+PersonData1[indexPerson].Name+"'s contact as well ('/y'/ for yes, any key to cancel)? :");
+                        Console.Write("Do you want to delete "+PersonData1[indexPerson].Name+"'s contact as well "+Environment.NewLine+"('y' for yes, any key to cancel)? :");
                         string checkY = Console.ReadLine();
                         if ("yY".Contains(checkY))
                         {
@@ -632,7 +645,7 @@ namespace Hw1_Hashing
                             }
                             else
                             {
-                                Console.Write("Confirm ('/y'/ for yes, any key to cancel)? :");
+                                Console.Write("Confirm ('y' for yes, any key to cancel)? :");
                                 string confirm = Console.ReadLine();
                                 if ("Yy".Contains(confirm))
                                 {
