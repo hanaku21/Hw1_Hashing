@@ -406,6 +406,10 @@ namespace Hw1_Hashing
                         }
                     }
                     Hash[key] = x;
+                    if (Hash[key].ToString().Trim().Length == 0)
+                    {
+                        Hash.Remove(key);
+                    }
                 }
             }
 
@@ -620,6 +624,7 @@ namespace Hw1_Hashing
                             int indexPhone = PhoneData1.FindIndex(i=> i.no == personid);
                             PhoneData ph = PhoneData1[indexPhone];
                             DeleteHashTable(ph);
+                       
                             PersonData1.RemoveAt(indexPerson);
                             PhoneData1.RemoveAt(indexPhone);
                             
